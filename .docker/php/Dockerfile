@@ -1,4 +1,4 @@
-FROM registry.gitlab.com/rilex/docker-dev/php:7.4.5-fpm
+FROM registry.gitlab.com/rilex/docker-dev/php:8.1.0-fpm-alpine
 
-RUN docker-php-ext-install intl;
-RUN docker-php-ext-enable xdebug;
+RUN pecl install xdebug \
+    && docker-php-ext-enable xdebug;

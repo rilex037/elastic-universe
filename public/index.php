@@ -1,61 +1,55 @@
 <?php
 
-/**
- * @see       https://github.com/laminas-api-tools/api-tools-skeleton for the canonical source repository
- * @copyright https://github.com/laminas-api-tools/api-tools-skeleton/blob/master/COPYRIGHT.md
- * @license   https://github.com/laminas-api-tools/api-tools-skeleton/blob/master/LICENSE.md New BSD License
- */
+use Illuminate\Contracts\Http\Kernel;
+use Illuminate\Http\Request;
 
-use Laminas\ApiTools\Application;
-use Laminas\Stdlib\ArrayUtils;
+define('LARAVEL_START', microtime(true));
 
-/**
- * This makes our life easier when dealing with paths. Everything is relative
- * to the application root now.
- */
-chdir(dirname(__DIR__));
+/*
+|--------------------------------------------------------------------------
+| Check If The Application Is Under Maintenance
+|--------------------------------------------------------------------------
+|
+| If the application is in maintenance / demo mode via the "down" command
+| we will load this file so that any pre-rendered content can be shown
+| instead of starting the framework, which could cause an exception.
+|
+*/
 
-// Redirect legacy requests to enable/disable development mode to new tool
-if (
-    php_sapi_name() === 'cli'
-    && $argc > 2
-    && 'development' == $argv[1]
-    && in_array($argv[2], ['disable', 'enable'])
-) {
-    // Windows needs to execute the batch scripts that Composer generates,
-    // and not the Unix shell version.
-    $script = defined('PHP_WINDOWS_VERSION_BUILD') && constant('PHP_WINDOWS_VERSION_BUILD')
-        ? '.\\vendor\\bin\\laminas-development-mode.bat'
-        : './vendor/bin/laminas-development-mode';
-    system(sprintf('%s %s', $script, $argv[2]), $return);
-    exit($return);
+if (file_exists($maintenance = __DIR__.'/../storage/framework/maintenance.php')) {
+    require $maintenance;
 }
 
-// Decline static file requests back to the PHP built-in webserver
-if (php_sapi_name() === 'cli-server' && is_file(__DIR__ . parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH))) {
-    return false;
-}
+/*
+|--------------------------------------------------------------------------
+| Register The Auto Loader
+|--------------------------------------------------------------------------
+|
+| Composer provides a convenient, automatically generated class loader for
+| this application. We just need to utilize it! We'll simply require it
+| into the script here so we don't need to manually load our classes.
+|
+*/
 
-if (!file_exists('vendor/autoload.php')) {
-    throw new RuntimeException(
-        'Unable to load application.' . PHP_EOL
-            . '- Type `composer install` if you are developing locally.' . PHP_EOL
-            . '- Type `vagrant ssh -c \'composer install\'` if you are using Vagrant.' . PHP_EOL
-            . '- Type `docker-compose run api-tools composer install` if you are using Docker.'
-    );
-}
+require __DIR__.'/../vendor/autoload.php';
 
-// Setup autoloading
-include 'vendor/autoload.php';
+/*
+|--------------------------------------------------------------------------
+| Run The Application
+|--------------------------------------------------------------------------
+|
+| Once we have the application, we can handle the incoming request using
+| the application's HTTP kernel. Then, we will send the response back
+| to this client's browser, allowing them to enjoy our application.
+|
+*/
 
-$appConfig = include 'config/application.config.php';
+$app = require_once __DIR__.'/../bootstrap/app.php';
 
-if (file_exists('config/development.config.php')) {
-    $appConfig = ArrayUtils::merge(
-        $appConfig,
-        include 'config/development.config.php'
-    );
-}
+$kernel = $app->make(Kernel::class);
 
-// Run the application!
-Application::init($appConfig)->run();
+$response = $kernel->handle(
+    $request = Request::capture()
+)->send();
+
+$kernel->terminate($request, $response);
