@@ -7,8 +7,7 @@ use Elasticquent\ElasticquentTrait;
 
 class Post extends ElasticqModel
 {
-
-    protected $fillable = ['body', 'title', 'userId'];
+    protected $fillable = ['id', 'body', 'title', 'userId'];
 
     protected $mappingProperties = [
         'userId' => [
@@ -21,9 +20,6 @@ class Post extends ElasticqModel
             'type' => 'string',
         ]
     ];
-
-    use ElasticquentTrait;
-
 
     function getTypeName()
     {

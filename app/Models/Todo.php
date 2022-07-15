@@ -2,10 +2,27 @@
 
 namespace App\Models;
 
+use App\Models\Abstract\ElasticqModel;
 use Elasticquent\ElasticquentTrait;
-use Illuminate\Database\Eloquent\Model;
 
-class Todo extends Model
+class Todo extends ElasticqModel
 {
-    use ElasticquentTrait;
+    protected $fillable = ['dueOn', 'userId', 'title'];
+
+    protected $mappingProperties = [
+        'dueOn' => [
+            'type' => 'date',
+        ],
+        'userId' => [
+            'type' => 'integer',
+        ],
+        'title' => [
+            'type' => 'string',
+        ]
+    ];
+
+    function getTypeName()
+    {
+        return 'todos';
+    }
 }

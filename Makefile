@@ -1,11 +1,17 @@
 APP_CONTAINER=docker-compose exec -T php sh -c
 
 dockerize:
-	docker-compose down
-	docker network create --driver bridge test-net || true
-	docker-compose up -d --build
-	$(APP_CONTAINER) "composer install --no-interaction;"
+	@echo "Installing and starting project..."
+	@docker-compose down
+	@docker network inspect test-net >/dev/null 2>&1 || docker network create --driver bridge test-net
+	@docker-compose up -d --build
+	@$(APP_CONTAINER) "composer install --no-interaction;"
+	@$(APP_CONTAINER) "php artisan es:create_mappings;"
+
+start-up:
+	@docker-compose down
+	@docker network inspect test-net >/dev/null 2>&1 || docker network create --driver bridge test-net
+	@docker-compose up -d
 
 fix-permisions:
-	sudo chown -R $$USER:$$USER . && \
-	chmod -R 777 .
+	@sudo chown -R $$USER:$$USER . && chmod -R 777 .

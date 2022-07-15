@@ -36,10 +36,15 @@ services:
       - xpack.security.enabled=false
       - "discovery.type=single-node"
       - "ES_JAVA_OPTS= -Xms512m -Xmx512m"
+    volumes:
+      - elastic-storage:/usr/share/elasticsearch/data
     networks:
       - test-net
     ports:
       - "9200:9200"
+
+volumes:
+  elastic-storage:
 
 networks:
   test-net:
