@@ -43,20 +43,22 @@ class CreateMappings extends Command
      *
      * @return int
      */
-    public function handle()
+    public function handle(): bool
     {
         try {
             echo 'Creating indexes and mappings...' . PHP_EOL;;
             $this->createIndex();
             Post::putMapping(1);
             Todo::putMapping(1);
+            return true;
         } catch (\Elasticsearch\Common\Exceptions\BadRequest400Exception $e) {
             echo 'Error while creating indexes and mappings, or they already exist!' . PHP_EOL;
             Log::error($e);
+            return false;
         }
     }
 
-    public function createIndex($shards = 1, $replicas = 1)
+    private function createIndex($shards = 1, $replicas = 1)
     {
         $client = $this->getElasticSearchClient();
 
