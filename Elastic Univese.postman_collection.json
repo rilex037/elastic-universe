@@ -1,0 +1,327 @@
+{
+	"info": {
+		"_postman_id": "cd0c5b76-3606-40d9-a580-118d9f42d514",
+		"name": "Elastic Univese",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "5374706"
+	},
+	"item": [
+		{
+			"name": "Elasticsearch",
+			"item": [
+				{
+					"name": "Posts (get exact match)",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"query\": {\n    \"bool\": {\n      \"must\": [\n        {\n          \"query_string\": {\n            \"default_field\": \"body\",\n            \"query\": \"test body sample\",\n            \"minimum_should_match\": \"100%\"\n          }\n        }\n      ]\n    }\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:9200/default/posts/_search",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9200",
+							"path": [
+								"default",
+								"posts",
+								"_search"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Posts (get all)",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"query\": {\n        \"bool\": {\n            \"must\": [\n                {\n                    \"match_all\": {}\n                }\n            ]\n        }\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:9200/default/todos/_search",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9200",
+							"path": [
+								"default",
+								"todos",
+								"_search"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "INDEX",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{ELASTICSEARCH_URL}}/default",
+							"host": [
+								"{{ELASTICSEARCH_URL}}"
+							],
+							"path": [
+								"default"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "GraphQL",
+			"item": [
+				{
+					"name": "Posts (get)",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query {\n  posts(\n    body: \"*\"\n    title: \"*\"\n    #userId:222,\n    page: 1\n    perPage: 500\n  ) {\n    page\n    perPage\n    records\n    totalPages\n    data {\n      id\n      body\n      title\n      userId\n    }\n  }\n}\n",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}",
+							"host": [
+								"{{API_URL}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Post (create)",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation {\n  createPost(\n    body: \"Lorem ipsum dolor sit amet\"\n    title: \"This Is Post Title\"\n    userId: 123\n  ) {\n    id\n    body\n    title\n    userId\n  }\n}\n",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}",
+							"host": [
+								"{{API_URL}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Post (edit)",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation {\n  editPost(\n    id: \"AYIAtPM6cXUnQL5Q8ufi\"\n    body: \"Nunc eu purus sit amet velit condimentum maximus.\"\n    title: \"Changed Title\"\n    userId: 123\n  )\n}\n",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}",
+							"host": [
+								"{{API_URL}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Post (delete)",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation {\n  deletePost(id: \"AYIAuO2McXUnQL5Q8ufj\")\n}\n",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}",
+							"host": [
+								"{{API_URL}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Todos (get)",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query {\n  todos(\n    #dueOn: \"2022-12-21 21:00:00\"\n    title: \"*\"\n    #status: \"*\"\n    #userId: 222\n    page: 1\n    perPage: 500\n  ) {\n   page\n    perPage\n    records\n    totalPages\n    data {\n      id\n      dueOn\n      title\n      status\n      userId\n    }\n  }\n}\n",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}",
+							"host": [
+								"{{API_URL}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Todo (create)",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation {\n  createTodo(\n    dueOn: \"2022-12-21 21:00:00\"\n    userId: 222\n    title: \"This is a Todo Title\"\n    status: pending\n  ) {\n    id\n    dueOn\n    userId\n    title\n    status\n  }\n}\n",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}",
+							"host": [
+								"{{API_URL}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Todo (edit)",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation {\n  editTodo(\n    id: \"AYIAq9vZcXUnQL5Q8ufg\"\n    dueOn: \"2023-12-21 21:00:00\"\n    userId: 223\n    title: \"Updated Title\"\n    status: pending\n  )\n}\n",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}",
+							"host": [
+								"{{API_URL}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Todo (delete)",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation {\n  deleteTodo(id: \"AYIAubrYcXUnQL5Q8ufk\")\n}\n",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}",
+							"host": [
+								"{{API_URL}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "API_URL",
+			"value": "http://localhost/graphql",
+			"type": "string"
+		},
+		{
+			"key": "ELASTICSEARCH_URL",
+			"value": "http://localhost:9200",
+			"type": "string"
+		}
+	]
+}
