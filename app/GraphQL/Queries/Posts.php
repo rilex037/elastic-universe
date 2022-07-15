@@ -33,7 +33,7 @@ final class Posts
             $res['data'][] =   (['id' => $value['_id']] + $value['_source']);
         }
 
-        return ($res);
+        return $res;
     }
 
     private function query()

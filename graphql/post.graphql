@@ -1,0 +1,37 @@
+scalar DateTime
+    @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTime")
+
+type Query {
+    posts(
+        page: Int!
+        perPage: Int!
+        records: Int
+        totalPages: Int
+        body: String
+        title: String
+        userId: Int
+    ): Posts
+}
+
+extend type Mutation {
+    createPost(body: String!, title: String!, userId: Int!): Post
+}
+
+extend type Mutation {
+    editPost(id: ID!, body: String, title: String, userId: Int): String
+}
+
+type Posts {
+    perPage: Int
+    page: Int
+    records: Int
+    totalPages: Int
+    data: [Post]
+}
+
+type Post {
+    id: ID!
+    body: String!
+    title: String!
+    userId: Int!
+}

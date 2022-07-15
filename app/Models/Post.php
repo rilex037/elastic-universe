@@ -10,6 +10,7 @@ class Post extends ElasticqModel
     protected $fillable = ['id', 'body', 'title', 'userId'];
 
     protected $mappingProperties = [
+
         'userId' => [
             'type' => 'integer',
         ],
@@ -21,7 +22,7 @@ class Post extends ElasticqModel
         ]
     ];
 
-    function getTypeName()
+    public function getTypeName()
     {
         return 'posts';
     }
