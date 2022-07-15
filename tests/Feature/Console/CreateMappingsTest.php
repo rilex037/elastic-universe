@@ -17,9 +17,9 @@ class CreateMappingsTest extends FeatureSetup
         Http::delete(env('ELASTICSEARCH_URL') . '/default')->body();
 
         // Creating it first time
-        $this->assertTrue((new CreateMappings())->handle());
+        $this->assertNull((new CreateMappings())->handle());
 
         // Return false if it already exists
-        $this->assertFalse((new CreateMappings())->handle());
+        $this->assertNull((new CreateMappings())->handle());
     }
 }
