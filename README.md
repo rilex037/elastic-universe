@@ -22,4 +22,4 @@ Postman collection and documentation are stored inside the
 
 ## Run Tests
 
-run `make test` to run unit tests, and `generate-coverage` to generate html code coverage report, stored in `storage/app/public/build/coverage-report`
+run `make test` to run unit tests, and `make generate-coverage` to generate html code coverage report, stored in `storage/app/public/build/coverage-report`
