@@ -1,7 +1,4 @@
-scalar DateTime
-    @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTime")
-
-type Query {
+extend type Query {
     posts(
         page: Int!
         perPage: Int!
@@ -21,12 +18,8 @@ extend type Mutation {
     editPost(id: ID!, body: String, title: String, userId: Int): String
 }
 
-type Posts {
-    perPage: Int
-    page: Int
-    records: Int
-    totalPages: Int
-    data: [Post]
+extend type Mutation {
+    deletePost(id: ID!): String
 }
 
 type Post {
@@ -34,4 +27,12 @@ type Post {
     body: String!
     title: String!
     userId: Int!
+}
+
+type Posts {
+    perPage: Int
+    page: Int
+    records: Int
+    totalPages: Int
+    data: [Post]
 }

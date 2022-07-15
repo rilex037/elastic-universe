@@ -1,1 +1,5 @@
+scalar DateTime
+    @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTime")
+
 #import post.graphql
+#import todo.graphql

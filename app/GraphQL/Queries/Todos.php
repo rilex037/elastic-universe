@@ -2,12 +2,13 @@
 
 namespace App\GraphQL\Queries;
 
-use App\Models\Post;
+use App\Models\Todo;
+use Carbon\Carbon;
 
 /**
- * Posts Resolver
+ * Todos Resolver
  */
-final class Posts
+final class Todos
 {
     private array $args;
 
@@ -19,32 +20,33 @@ final class Posts
     {
         $this->args = $args;
 
-        $posts = $this->query()->getHits();
+        $todos = $this->query()->getHits();
 
         $res = [];
         $res['perPage'] = $args['perPage'];
         $res['page'] = $args['page'];
 
-        $res['records'] = $posts['total'];
-        $res['totalPages'] = (int) ceil($posts['total'] / $args['perPage']);
+        $res['records'] = $todos['total'];
+        $res['totalPages'] = (int) ceil($todos['total'] / $args['perPage']);
 
-        foreach ($posts['hits'] as $value) {
-            $res['data'][] =   (['id' => $value['_id']] + $value['_source']);
+        foreach ($todos['hits'] as $value) {
+            $value['_source']['dueOn']  =  Carbon::parse($value['_source']['dueOn']);
+            $res['data'][] = (['id' => $value['_id']] + $value['_source']);
         }
 
-        return $res;
+        return ($res);
     }
 
     private function query()
     {
-        return \App\Models\Post::complexSearch([
+        return \App\Models\Todo::complexSearch([
             'body' => [
                 "from" => ($this->args['page'] - 1) * $this->args['perPage'],
                 'size' => $this->args['perPage'],
                 'query' => [
                     "bool" => [
-                        'filter' => ["type" => ["value" => (new Post())->getTypeName()]],
-                        "must" => $this->parseArgs($this->args)
+                        'filter' => ["type" => ["value" => (new Todo())->getTypeName()]],
+                        "must" => $this->parseArgs($this->args),
                     ]
                 ]
             ]
@@ -55,14 +57,10 @@ final class Posts
     {
         $parsed = [];
 
-        if (array_key_exists('body', $this->args)) {
+        if (array_key_exists('dueOn', $this->args)) {
+            $dTime =  Carbon::parse($this->args['dueOn']);
             $parsed[]  = [
-                'query_string' => [
-                    'query' => $this->args['body'],
-                    "minimum_should_match" => "100%",
-                    "default_field" => "body"
-
-                ]
+                'match' =>  ['dueOn' => $dTime]
             ];
         }
 
@@ -72,6 +70,16 @@ final class Posts
                     'query' => $this->args['title'],
                     "minimum_should_match" => "100%",
                     "default_field" => "title",
+                ]
+            ];
+        }
+
+        if (array_key_exists('status', $this->args)) {
+            $parsed[]  = [
+                'query_string' => [
+                    'query' => $this->args['status'],
+                    "minimum_should_match" => "100%",
+                    "default_field" => "status",
                 ]
             ];
         }

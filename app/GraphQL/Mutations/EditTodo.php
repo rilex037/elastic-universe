@@ -2,15 +2,15 @@
 
 namespace App\GraphQL\Mutations;
 
-use App\Models\Post;
+use App\Models\Todo;
 use Elasticquent\ElasticquentClientTrait;
 use Elasticquent\ElasticquentTrait;
 use Elasticsearch\Common\Exceptions\NoDocumentsToGetException;
 
 /**
- * EditPost Resolver
+ * EditTodo Resolver
  */
-final class EditPost
+final class EditTodo
 {
     use ElasticquentTrait;
     use ElasticquentClientTrait;
@@ -23,7 +23,7 @@ final class EditPost
     {
         $this->args = $args;
 
-        $post = Post::searchByQuery(
+        $todo = Todo::searchByQuery(
             [
                 'terms' => [
                     '_id' => [$this->args['id']]
@@ -31,16 +31,16 @@ final class EditPost
             ]
         )->getHits()['hits'];
 
-        if (!$post) {
+        if (!$todo) {
             throw new NoDocumentsToGetException('Invalid document ID!');
         }
 
         $client = $this->getElasticSearchClient();
         $status =  $client->update(
             ([
-                'id' => $post[0]['_id'],
+                'id' => $todo[0]['_id'],
                 'index' => config('elasticquent.default_index'),
-                'type' => (new Post)->getTypeName(),
+                'type' => (new Todo())->getTypeName(),
                 'body' => $this->parseArgs()
             ])
         );
@@ -54,16 +54,20 @@ final class EditPost
     {
         $parsed = [];
 
-        if (array_key_exists('body', $this->args)) {
-            $parsed['doc']['body']  = $this->args['body'];
+        if (array_key_exists('dueOn', $this->args)) {
+            $parsed['doc']['dueOn']  = $this->args['dueOn'];
+        }
+
+        if (array_key_exists('userId', $this->args)) {
+            $parsed['doc']['userId']  = $this->args['userId'];
         }
 
         if (array_key_exists('title', $this->args)) {
             $parsed['doc']['title']  = $this->args['title'];
         }
 
-        if (array_key_exists('userId', $this->args)) {
-            $parsed['doc']['userId']  = $this->args['userId'];
+        if (array_key_exists('status', $this->args)) {
+            $parsed['doc']['status']  = $this->args['status'];
         }
 
         return $parsed;

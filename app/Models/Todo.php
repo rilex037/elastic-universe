@@ -3,11 +3,10 @@
 namespace App\Models;
 
 use App\Models\Abstract\ElasticqModel;
-use Elasticquent\ElasticquentTrait;
 
 class Todo extends ElasticqModel
 {
-    protected $fillable = ['dueOn', 'userId', 'title'];
+    protected $fillable = ['dueOn', 'userId', 'title', 'status'];
 
     protected $mappingProperties = [
         'dueOn' => [
@@ -17,6 +16,9 @@ class Todo extends ElasticqModel
             'type' => 'integer',
         ],
         'title' => [
+            'type' => 'string',
+        ],
+        'status' => [
             'type' => 'string',
         ]
     ];

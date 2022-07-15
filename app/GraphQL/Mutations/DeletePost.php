@@ -8,9 +8,9 @@ use Elasticquent\ElasticquentTrait;
 use Elasticsearch\Common\Exceptions\NoDocumentsToGetException;
 
 /**
- * EditPost Resolver
+ * DeletePost Resolver
  */
-final class EditPost
+final class DeletePost
 {
     use ElasticquentTrait;
     use ElasticquentClientTrait;
@@ -36,36 +36,17 @@ final class EditPost
         }
 
         $client = $this->getElasticSearchClient();
-        $status =  $client->update(
+        $status =  $client->delete(
             ([
                 'id' => $post[0]['_id'],
                 'index' => config('elasticquent.default_index'),
                 'type' => (new Post)->getTypeName(),
-                'body' => $this->parseArgs()
+
             ])
         );
 
-        return $status['result'] == 'updated' ?
-            sprintf('Document with ID: %s has been updated.', $status['_id']) :
-            sprintf('Document with ID: %s has not being updated.', $status['_id']);
-    }
-
-    private function parseArgs(): array
-    {
-        $parsed = [];
-
-        if (array_key_exists('body', $this->args)) {
-            $parsed['doc']['body']  = $this->args['body'];
-        }
-
-        if (array_key_exists('title', $this->args)) {
-            $parsed['doc']['title']  = $this->args['title'];
-        }
-
-        if (array_key_exists('userId', $this->args)) {
-            $parsed['doc']['userId']  = $this->args['userId'];
-        }
-
-        return $parsed;
+        return $status['result'] == 'deleted' ?
+            sprintf('Document with ID: %s has been deleted.', $status['_id']) :
+            sprintf('Document with ID: %s has not being deleted.', $status['_id']);
     }
 }

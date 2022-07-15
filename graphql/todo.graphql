@@ -1,0 +1,56 @@
+extend type Query {
+    todos(
+        page: Int!
+        perPage: Int!
+        records: Int
+        totalPages: Int
+        dueOn: String
+        userId: Int
+        title: String
+        status: String
+    ): Todos
+}
+
+extend type Mutation {
+    createTodo(
+        dueOn: DateTime!
+        userId: Int!
+        title: String!
+        status: Status!
+    ): Todo
+}
+
+extend type Mutation {
+    editTodo(
+        id: ID!
+        dueOn: DateTime
+        userId: Int
+        title: String
+        status: Status
+    ): String
+}
+
+extend type Mutation {
+    deleteTodo(id: ID!): String
+}
+
+enum Status {
+    pending
+    completed
+}
+
+type Todo {
+    id: ID!
+    dueOn: DateTime!
+    userId: Int!
+    title: String!
+    status: Status!
+}
+
+type Todos {
+    perPage: Int
+    page: Int
+    records: Int
+    totalPages: Int
+    data: [Todo]
+}

@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Models\Abstract\ElasticqModel;
-use Elasticquent\ElasticquentTrait;
 
 class Post extends ElasticqModel
 {
