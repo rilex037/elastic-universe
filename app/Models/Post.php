@@ -6,7 +6,7 @@ use App\Models\Abstract\ElasticqModel;
 
 class Post extends ElasticqModel
 {
-    protected $fillable = ['id', 'body', 'title', 'userId'];
+    protected $fillable = ['body', 'title', 'userId'];
 
     protected $mappingProperties = [
 
