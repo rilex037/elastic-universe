@@ -22,7 +22,7 @@ generate-coverage:
 	@$(APP_CONTAINER) "php -dxdebug.mode=coverage ./vendor/phpunit/phpunit/phpunit --coverage-html ./storage/app/public/build/coverage-report --testsuite Feature,Unit --stop-on-failure; \
 	chmod -R 777 .";
 
-fix-permisions:
+fix-permissions:
 	@echo "Fixing file permissions..."
 	@$(APP_CONTAINER)  "chmod -R 777 ."
 	@echo "Done."

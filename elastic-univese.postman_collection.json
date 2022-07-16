@@ -1,7 +1,8 @@
 {
 	"info": {
-		"_postman_id": "cd0c5b76-3606-40d9-a580-118d9f42d514",
+		"_postman_id": "3f0e3e1b-310c-4581-a572-cc3675aaf5de",
 		"name": "Elastic Univese",
+		"description": "Documentation for GraphQL API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "5374706"
 	},
@@ -38,7 +39,8 @@
 								"posts",
 								"_search"
 							]
-						}
+						},
+						"description": "Example on how to exact match form a document field."
 					},
 					"response": []
 				},
@@ -60,7 +62,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:9200/default/todos/_search",
+							"raw": "http://localhost:9200/default/posts/_search",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -68,10 +70,11 @@
 							"port": "9200",
 							"path": [
 								"default",
-								"todos",
+								"posts",
 								"_search"
 							]
-						}
+						},
+						"description": "Get all documents with post type.  \nTo get other types, inside url, change to http://localhost:9200/default/{type}/_search"
 					},
 					"response": []
 				},
@@ -88,11 +91,13 @@
 							"path": [
 								"default"
 							]
-						}
+						},
+						"description": "With this endpoint we can check all mappings for `default` index."
 					},
 					"response": []
 				}
-			]
+			],
+			"description": "Example endpoints for direct access to elastic search API"
 		},
 		{
 			"name": "GraphQL",
@@ -108,7 +113,7 @@
 						"body": {
 							"mode": "graphql",
 							"graphql": {
-								"query": "query {\n  posts(\n    body: \"*\"\n    title: \"*\"\n    #userId:222,\n    page: 1\n    perPage: 500\n  ) {\n    page\n    perPage\n    records\n    totalPages\n    data {\n      id\n      body\n      title\n      userId\n    }\n  }\n}\n",
+								"query": "query {\n  posts(\n    body: \"*\"\n    title: \"*\"\n    userId:123,\n    page: 1\n    perPage: 10\n  ) {\n    page\n    perPage\n    records\n    totalPages\n    data {\n      id\n      body\n      title\n      userId\n    }\n  }\n}\n",
 								"variables": ""
 							}
 						},
@@ -117,7 +122,8 @@
 							"host": [
 								"{{API_URL}}"
 							]
-						}
+						},
+						"description": "Get Posts:\n\n```\n@param body (string, optional, wildcard supported)\n@param title (string, optional, wildcard supported)\n@param userId (int, optional)\n@param page (int, required)\n@param perPage (int, required)\n\n```"
 					},
 					"response": []
 				},
@@ -141,7 +147,8 @@
 							"host": [
 								"{{API_URL}}"
 							]
-						}
+						},
+						"description": "Create Post:\n\n```\n@param body (string, required)\n@param title (string, required)\n@param userId (int, required)\n\n```"
 					},
 					"response": []
 				},
@@ -165,7 +172,8 @@
 							"host": [
 								"{{API_URL}}"
 							]
-						}
+						},
+						"description": "Edit Post based on ID:\n\n```\n@param id (string, required)\n@param body (string, optional)\n@param title (string, optional)\n@param userId (int, optional)\n\n```\n\nOnly changed fields will be updated."
 					},
 					"response": []
 				},
@@ -189,7 +197,8 @@
 							"host": [
 								"{{API_URL}}"
 							]
-						}
+						},
+						"description": "Delete Post based on ID:\n```\n@param id (string, required)\n\n```"
 					},
 					"response": []
 				},
@@ -204,7 +213,7 @@
 						"body": {
 							"mode": "graphql",
 							"graphql": {
-								"query": "query {\n  todos(\n    #dueOn: \"2022-12-21 21:00:00\"\n    title: \"*\"\n    #status: \"*\"\n    #userId: 222\n    page: 1\n    perPage: 500\n  ) {\n   page\n    perPage\n    records\n    totalPages\n    data {\n      id\n      dueOn\n      title\n      status\n      userId\n    }\n  }\n}\n",
+								"query": "query {\n  todos(\n    dueOn: \"2022-12-21 21:00:00\"\n    title: \"*\"\n    status: \"*\"\n    userId: 222\n    page: 1\n    perPage: 10\n  ) {\n   page\n    perPage\n    records\n    totalPages\n    data {\n      id\n      dueOn\n      title\n      status\n      userId\n    }\n  }\n}\n",
 								"variables": ""
 							}
 						},
@@ -213,7 +222,8 @@
 							"host": [
 								"{{API_URL}}"
 							]
-						}
+						},
+						"description": "Get Todos:\n\n```\n@param dueOn (date as string with optional time, optional)\n@param title (string, optional, wildcard supported)\n@param status (enum [pending, completed], optional, wildcard supported)\n@param userId (int, optional)\n@param page (int, required)\n@param perPage (int, required)\n\n```"
 					},
 					"response": []
 				},
@@ -237,7 +247,8 @@
 							"host": [
 								"{{API_URL}}"
 							]
-						}
+						},
+						"description": "Create Todo:\n\n```\n@param dueOn (datetime, required)\n@param userId (int, required)\n@param title (string, required)\n@param status (enum [pending, completed], required)\n\n```"
 					},
 					"response": []
 				},
@@ -261,7 +272,8 @@
 							"host": [
 								"{{API_URL}}"
 							]
-						}
+						},
+						"description": "Edit Todo based on ID\n```\n@param id (string, required)\n@param dueOn (datetime, optional)\n@param userId (int, optional)\n@param title (string, optional)\n@param status (string, optional)\n\n```"
 					},
 					"response": []
 				},
@@ -285,11 +297,13 @@
 							"host": [
 								"{{API_URL}}"
 							]
-						}
+						},
+						"description": "Delete Todo based on ID:\n```\n@param id (string, required)\n```"
 					},
 					"response": []
 				}
-			]
+			],
+			"description": "GraphQL endpoints for the crud operations for Posts and Todos."
 		}
 	],
 	"event": [
