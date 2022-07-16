@@ -2,15 +2,9 @@
 
 namespace Tests\Feature;
 
-
 class HomepageTest extends FeatureSetup
 {
-    /**
-     * A basic test example.
-     *
-     * @return void
-     */
-    public function testExample()
+    public function testHomepageGet()
     {
         $response = $this->get('/');
 

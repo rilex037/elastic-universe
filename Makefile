@@ -1,4 +1,4 @@
-APP_CONTAINER=docker-compose exec -T php sh -c
+APP_CONTAINER=docker-compose exec php sh -c
 
 dockerize:
 	@echo "Installing and starting project..."
@@ -14,12 +14,15 @@ start-up:
 	@docker network inspect test-net >/dev/null 2>&1 || docker network create --driver bridge test-net
 	@docker-compose up -d
 
+# make test ARGS="tests/Feature/Endpoints/Graphql/TodoCreateTest.php"
 test:
-	$(APP_CONTAINER) "php artisan test"
+	@$(APP_CONTAINER) "php artisan test $(ARGS)"
 
 generate-coverage:
-	$(APP_CONTAINER) "php -dxdebug.mode=coverage ./vendor/phpunit/phpunit/phpunit --coverage-html ./storage/app/public/build/coverage-report --testsuite Feature,Unit,Integration --stop-on-failure; \
+	@$(APP_CONTAINER) "php -dxdebug.mode=coverage ./vendor/phpunit/phpunit/phpunit --coverage-html ./storage/app/public/build/coverage-report --testsuite Feature,Unit --stop-on-failure; \
 	chmod -R 777 .";
 
 fix-permisions:
+	@echo "Fixing file permissions..."
 	@$(APP_CONTAINER)  "chmod -R 777 ."
+	@echo "Done."

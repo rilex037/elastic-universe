@@ -11,28 +11,55 @@ use Tests\TestCase;
 
 abstract class FeatureSetup extends TestCase
 {
-    use ElasticquentTrait;
-    use ElasticquentClientTrait;
+  use ElasticquentTrait;
+  use ElasticquentClientTrait;
 
-    use MakesGraphQLRequests;
+  use MakesGraphQLRequests;
 
-    protected static $initialized = FALSE;
+  protected static $initialized = FALSE;
 
-    protected function setUp(): void
-    {
-        parent::setup();
+  protected function setUp(): void
+  {
+    parent::setup();
 
-        if (!self::$initialized) {
-            // Delete index in case it exists
-            Http::delete(env('ELASTICSEARCH_URL') . '/default')->body();
+    if (!self::$initialized) {
+      echo 'RUNNING INTEGRATION TESTS...' . PHP_EOL;
 
-            // Creating it first time
-            $this->assertNull((new CreateMappings())->handle());
+      ob_start();
+      // Delete index in case it exists
+      Http::delete(env('ELASTICSEARCH_URL') . '/default')->body();
 
-            // Run it again to show error msg
-            (new CreateMappings())->handle();
+      // Creating mappings first time
+      $this->assertNull((new CreateMappings())->handle());
 
-            self::$initialized = TRUE;
-        }
+      // Run it again to show error msg
+      (new CreateMappings())->handle();
+      ob_end_clean();
+
+      self::$initialized = TRUE;
     }
+  }
+
+  protected function getId(string $type)
+  {
+    return $this->graphQL(
+      /** @lang GraphQL */
+      '
+        query {
+          ' . $type . '(
+            page: 1
+            perPage: 10
+          ) {
+            page
+            perPage
+            records
+            totalPages
+            data {
+              id
+            }
+          }
+        }
+      '
+    );
+  }
 }

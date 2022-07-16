@@ -23,7 +23,7 @@ class Todo extends ElasticqModel
         ]
     ];
 
-    function getTypeName()
+    public function getTypeName()
     {
         return 'todos';
     }

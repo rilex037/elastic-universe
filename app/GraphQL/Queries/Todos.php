@@ -58,9 +58,9 @@ final class Todos
         $parsed = [];
 
         if (array_key_exists('dueOn', $this->args)) {
-            $dTime =  Carbon::parse($this->args['dueOn']);
-            $parsed[]  = [
-                'match' =>  ['dueOn' => $dTime]
+            $dTime = Carbon::parse($this->args['dueOn']);
+            $parsed[] = [
+                'match' => ['dueOn' => $dTime->toTimeString() == '00:00:00' ? $this->args['dueOn'] : $dTime]
             ];
         }
 
