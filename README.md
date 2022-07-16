@@ -18,7 +18,7 @@ Run `make fix-permissions` afterwards, so that all generated files can be writab
 ## API Documentation
 
 Postman collection and documentation are stored inside the
-`Elastic Univese.postman_collection.json` file.
+`elastic-univese.postman_collection.json` file.
 Newer versions of postman has a nice tab to present collections and view descriptions:
 ![](https://i.imgur.com/1zHqZ2b.png)
 
