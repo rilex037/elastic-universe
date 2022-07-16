@@ -23,7 +23,7 @@ Newer versions of postman has a nice tab to present collections and view descrip
 ![](https://i.imgur.com/1zHqZ2b.png)
 
 Additionally, there is also an online documentation, but it seems less readable:
-https://documenter.getpostman.com/view/5374706/UzQvs4oU
+https://documenter.getpostman.com/view/5374706/UzQvs4oX
 
 ## Run Tests
 
