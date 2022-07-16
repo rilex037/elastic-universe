@@ -1,6 +1,8 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Endpoints;
+
+use Tests\Feature\FeatureSetup;
 
 class HomepageTest extends FeatureSetup
 {
